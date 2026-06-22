@@ -1,1 +1,7 @@
 description = "Testing library"
+version = "0.1"
+requires=""
+archive(native) = "toxcatl.cmxa"
+archive(byte) = "toxcatl.cma"
+plugin(byte) = "toxcatl.cma"
+plugin(native) = "toxcatl.cmxs"

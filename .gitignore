@@ -1,1 +1,6 @@
 .depend
+*.cmi
+*.a
+*.cmx
+*.o
+toxcatl

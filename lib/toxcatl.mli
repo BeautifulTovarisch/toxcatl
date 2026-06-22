@@ -11,6 +11,9 @@ module Case : sig
 
   (** [compose] combines the results of tests *)
   val compose : ('a -> 'a -> 'a) -> 'a t -> 'a t -> 'a t
+
+  val ( >>= ) : 'a t -> ('a -> 'b t) -> 'b t
+  val ( >=> ) : ('a -> 'a -> 'a) -> 'a t -> 'a t -> 'a t
 end
 
 (** [Suite] is a collection of test [Case]s *)
@@ -22,4 +25,7 @@ module Suite : sig
 
   (** [compose] combines two test suites  *)
   val compose : ('a -> 'b -> 'c) -> 'a * 'd Case.t list -> 'b * 'd Case.t list -> ('c, 'd) t
+
+  val ( >>= ) : ('a, 'b) t -> ('a -> 'b Case.t list -> 'c) -> 'c
+  val ( >=> ) : ('a -> 'b -> 'c) -> 'a * 'd Case.t list -> 'b * 'd Case.t list -> ('c, 'd) t
 end

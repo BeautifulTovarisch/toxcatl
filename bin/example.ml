@@ -1,4 +1,9 @@
 open Toxcatl
+open Toxcatl.Case
+open Toxcatl.Suite
 
 let test_equality =
-  Pass
+  Case.Pass
+
+let test_another =
+  Test("hello", [Pass])

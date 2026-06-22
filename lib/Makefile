@@ -21,12 +21,12 @@ TESTS := $(addprefix test, $(TESTSRC:_test.ml=))
 all : $(MODULES)
 
 .PHONY: $(MODULES)
-$(MODULES) : % : .depend %.cmi %.cma
+$(MODULES) : % : .depend %.cmi %.cmxa
 
 .PHONY: install
 install:
 	-ocamlfind remove $(LIB)
-	ocamlfind install $(LIB) META *.cmi *.a
+	ocamlfind install $(LIB) META *.mli *.cmi *.cmx *.cmxa *.a
 
 # make test<ModuleName>
 .PHONY: $(TESTS)
@@ -43,8 +43,11 @@ $(TESTS) : % :
 %.cmi : %.mli
 	$(OCAMLOPT) $(OCAMLFLAGS) -c $<
 
-%.cma : %.ml
-	$(OCAMLOPT) $(OCAMLFLAGS) -a $< -o $*
+%.cmx : %.ml
+	$(OCAMLOPT) $(OCAMLFLAGS) -c $<
+
+%.cmxa : %.cmx
+	$(OCAMLOPT) $(OCAMLFLAGS) -a -o $*.cmxa $<
 
 .depend:
 	ocamldep *.ml *.mli > .depend
@@ -52,5 +55,4 @@ $(TESTS) : % :
 include .depend
 
 clean:
-	-rm $(MODULES)
-	rm -f *.a *.o *.cm[iox]
+	rm -f *.a *.o *.cm[iox] *.cmxa
