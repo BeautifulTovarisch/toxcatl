@@ -17,13 +17,25 @@ let () =
 let pp_list fmt l =
   (Format.pp_print_list (fun ppf x -> Format.fprintf ppf fmt x)) l
 
+let pp_int fmt a =
+  Format.printf fmt (Format.pp_print_int) a
+
 let pretty_list fmt lst =
   Format.printf "@[[%a]@]@." (pp_list fmt) lst
 
-let pp_lists ppf fmt a b =
-  Format.printf ppf (pp_list fmt) a (pp_list fmt) b
+let mk_ppf printer ppf fmt a b =
+  Format.printf ppf
+    (printer fmt) a
+    (printer fmt) b
+
+let pp_lists = mk_ppf pp_list
 
 let () =
-  pp_lists "@[expected [%a] got [%a]@]@." "%d;" [] [1; 2; 3];
   pretty_list "%d;" [1; 2; 3];
   pretty_list "%d;" [3; 4; 5];;
+  pretty_list "%d;" [1; 2; 3];
+  pp_lists "@[expected [%a] got [%a]@]@." "%d;" [] [1; 2; 3];
+  pretty_list "%d;" [1; 2; 3];
+  pretty_list "%d;" [1; 2; 3];
+  pretty_list "%d;" [1; 2; 3];
+  pp_int "@[int: <%a>@]@." 123
