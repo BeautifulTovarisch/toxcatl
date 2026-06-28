@@ -4,3 +4,5 @@
 *.cmx
 *.o
 toxcatl
+*.cmxa
+bin/example
