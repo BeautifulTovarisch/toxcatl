@@ -34,4 +34,4 @@ val suite : string -> (unit -> string C.t list) -> unit
 
 (** [test_eq] is a helper function to compare [a] and [b], returning [Pass] if
   * [a] equals [b] or a [Fail] containing the [fmt] message *)
-val test_eq : 'a -> 'a -> ('a -> 'a -> 'b, unit, string) format -> 'b C.t
+val test_eq : ?fmt:('a -> 'a -> string, unit, string) format -> 'a -> 'a -> string C.t

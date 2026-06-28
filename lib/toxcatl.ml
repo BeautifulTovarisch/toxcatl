@@ -38,6 +38,12 @@ let print_case = function
   | Case.Pass -> ()
   | Case.Fail(e) -> printf "FAIL: %s@ " e
 
+(* Format.printf "@[[%a]@]@." (Format.pp_print_list (fun out x -> Format.fprintf out "%d;" x)) [1; 2; 3];; *)
+
+let print_list fmt l =
+  let printer = (fun out x -> Format.fprintf out fmt x) in
+  Format.printf "@[%a]@]@." (Format.pp_print_list printer) l
+
 let suite name f =
   let open S in
   Test(name, f ()) >>= fun name res ->
@@ -48,6 +54,8 @@ let suite name f =
     printf "@]";
     printf "@."
 
-let test_eq a b fmt = match Stdlib.compare a b with
+let test_eq ?fmt a b = match Stdlib.compare a b with
 | 0 -> C.Pass
-| _ -> C.Fail(Printf.sprintf fmt a b)
+| _ -> match fmt with
+| None -> C.Fail("expected values to be equal")
+| Some(f) -> C.Fail(Format.sprintf f a b)
