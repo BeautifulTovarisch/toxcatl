@@ -1,5 +1,5 @@
 (** Toxcatl
-    A simple testing library. *)
+  * A simple testing library. *)
 
 (** [Case] represents a single test case *)
 module Case : sig
@@ -23,9 +23,15 @@ module Suite : sig
   (** [bind] chains together a [Suite]s *)
   val bind : ('a, 'b) t -> ('a -> 'b Case.t list -> 'c) -> 'c
 
-  (** [compose] combines two test suites  *)
-  val compose : ('a -> 'b -> 'c) -> 'a * 'd Case.t list -> 'b * 'd Case.t list -> ('c, 'd) t
-
   val ( >>= ) : ('a, 'b) t -> ('a -> 'b Case.t list -> 'c) -> 'c
-  val ( >=> ) : ('a -> 'b -> 'c) -> 'a * 'd Case.t list -> 'b * 'd Case.t list -> ('c, 'd) t
 end
+
+module C = Case
+module S = Suite
+
+(** [suite] runs a suite of unit tests and outputs the result *)
+val suite : string -> (unit -> string C.t list) -> unit
+
+(** [test_eq] is a helper function to compare [a] and [b], returning [Pass] if
+  * [a] equals [b] or a [Fail] containing the [fmt] message *)
+val test_eq : 'a -> 'a -> ('a -> 'a -> 'b, unit, string) format -> 'b C.t

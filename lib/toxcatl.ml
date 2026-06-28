@@ -2,6 +2,8 @@
    into issues with different arity ('a t vs ('a, 'b) t). Reconsider design in
    the future *)
 
+open Format
+
 module Case = struct
   type 'a t = Pass | Fail of 'a
 
@@ -26,10 +28,26 @@ module Suite = struct
   let bind m f =
     let Test(a, res) = m in f a res
 
-  let compose fn s1 s2 =
-    let (a, res1), (b, res2) = s1, s2 in
-    Test (fn a b, res1 @ res2)
-
   let ( >>= ) = bind
-  let ( >=> ) = compose
 end
+
+module C = Case
+module S = Suite
+
+let print_case = function
+  | Case.Pass -> ()
+  | Case.Fail(e) -> printf "FAIL: %s@ " e
+
+let suite name f =
+  let open S in
+  Test(name, f ()) >>= fun name res ->
+    printf "@[<v>SUITE: %s@;" name;
+    printf "@[<v 1> ";
+    List.iter print_case res;
+    printf "@]";
+    printf "@]";
+    printf "@."
+
+let test_eq a b fmt = match Stdlib.compare a b with
+| 0 -> C.Pass
+| _ -> C.Fail(Printf.sprintf fmt a b)
